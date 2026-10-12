@@ -1,7 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
-const key = import.meta.env.VITE_SUPABASE_KEY as string | undefined;
+// En Actions, una variable sin definir llega como cadena vacía: vacío = sin configurar.
+const url = (import.meta.env.VITE_SUPABASE_URL as string | undefined) || undefined;
+const key = (import.meta.env.VITE_SUPABASE_KEY as string | undefined) || undefined;
 export const configured = Boolean(url && key);
 
 // «Recordarme»: con la casilla marcada la sesión vive en localStorage (sobrevive
