@@ -213,13 +213,13 @@ function ProfileCard() {
 
   return (
     <section className="card stack" aria-label="Tu perfil">
-      <div className="row" style={{ gap: 14 }}>
+      <div className="stack-sm" style={{ alignItems: 'center', textAlign: 'center' }}>
         <label style={{ position: 'relative', cursor: 'pointer' }} aria-label="Cambiar foto">
-          <Avatar p={me} size={72} ring />
-          <span className="icon-btn" style={{ position: 'absolute', right: -6, bottom: -4, width: 32, height: 32 }}><Camera size={16} weight="bold" /></span>
+          <Avatar p={me} size={104} ring />
+          <span className="icon-btn" style={{ position: 'absolute', right: -2, bottom: 0, width: 36, height: 36 }}><Camera size={18} weight="bold" /></span>
           <input type="file" accept="image/*" className="sr-only" disabled={uploading} onChange={(e) => onPhoto(e.target.files?.[0])} />
         </label>
-        <div className="grow">
+        <div>
           <div className="title-md">{me.display_name}</div>
           <div className="tiny bold muted">Entras como @{me.username}{uploading && ' · subiendo foto…'}</div>
         </div>
@@ -251,7 +251,7 @@ function DeviceCard() {
   const standalone = isStandalone();
   const ios = isIOS();
 
-  useEffect(() => { pushEnabled().then(setOn); }, []);
+  useEffect(() => { pushEnabled().then(setOn, () => setOn(false)); }, []);
   useEffect(() => {
     const onReady = () => setInstallable(true);
     addEventListener('acorrea2-installable', onReady);
@@ -277,12 +277,18 @@ function DeviceCard() {
           <span className="small">1. Ábrela en <b>Safari</b>. 2. Pulsa <Export size={16} weight="bold" style={{ verticalAlign: '-3px' }} /> <b>Compartir</b>. 3. <PlusSquare size={16} weight="bold" style={{ verticalAlign: '-3px' }} /> <b>Añadir a pantalla de inicio</b>. 4. Ábrela desde el icono.</span>
         </div>
       )}
+      {!standalone && !ios && !installable && (
+        <div className="banner" style={{ alignItems: 'flex-start', flexDirection: 'column', gap: 6 }}>
+          <span>Instálala en el móvil:</span>
+          <span className="small">Ábrela en <b>Chrome</b> → menú <b>⋮</b> → <b>Instalar app</b> (o «Añadir a pantalla de inicio»). Luego ábrela desde el icono.</span>
+        </div>
+      )}
       {!standalone && !ios && installable && (
         <button className="btn btn-lime" onClick={() => promptInstall().then(() => setInstallable(false))}><DeviceMobile size={18} weight="bold" /> Instalar la app</button>
       )}
 
       {pushSupported() ? (
-        <button className={`btn ${on ? '' : 'btn-primary'}`} disabled={busy || on === null} onClick={toggle}>
+        <button className={`btn ${on ? '' : 'btn-primary'}`} disabled={busy} onClick={toggle}>
           <Bell size={18} weight={on ? 'regular' : 'fill'} /> {on ? 'Desactivar avisos' : 'Activar avisos'}
         </button>
       ) : (

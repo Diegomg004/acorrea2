@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { motion } from 'motion/react';
-import { Bone, Camera, LockKey, PawPrint, User } from '@phosphor-icons/react';
+import { Bone, Camera, Eye, EyeSlash, LockKey, PawPrint, User } from '@phosphor-icons/react';
 import { Logo } from './Logo.tsx';
 import { Avatar, AvatarStack } from './ui.tsx';
 import { humanError, useToast } from './toast.tsx';
@@ -18,6 +18,7 @@ export function AuthScreen({ inviteToken }: { inviteToken: string | null }) {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRememberState] = useState(true);
+  const [showPass, setShowPass] = useState(false);
   const [photo, setPhoto] = useState<File | null>(null);
   const [color] = useState(() => COLORS[Math.floor(Math.random() * COLORS.length)]);
   const [busy, setBusy] = useState(false);
@@ -137,9 +138,13 @@ export function AuthScreen({ inviteToken }: { inviteToken: string | null }) {
             <label className="label" htmlFor="pass">Contraseña</label>
             <div className="input-icon">
               <LockKey size={20} weight="bold" />
-              <input id="pass" className="input" type="password" minLength={8} maxLength={72}
+              <input id="pass" className="input" type={showPass ? 'text' : 'password'} minLength={8} maxLength={72} style={{ paddingRight: 52 }}
                 autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
                 value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Mínimo 8 caracteres" required />
+              <button type="button" className="pass-eye" onClick={() => setShowPass((v) => !v)}
+                aria-label={showPass ? 'Ocultar contraseña' : 'Ver contraseña'} aria-pressed={showPass}>
+                {showPass ? <EyeSlash size={22} weight="bold" /> : <Eye size={22} weight="bold" />}
+              </button>
             </div>
           </div>
           <label className="check">

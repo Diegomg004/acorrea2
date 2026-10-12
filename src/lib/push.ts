@@ -22,16 +22,35 @@ const toBytes = (b64: string) => {
   return Uint8Array.from(s, (c) => c.charCodeAt(0));
 };
 
+const withTimeout = <T,>(p: Promise<T>, ms: number, msg: string) =>
+  Promise.race([p, new Promise<never>((_, ko) => setTimeout(() => ko(new Error(msg)), ms))]);
+
+/** Nunca se queda colgado: ante cualquier duda, «no activados». */
 export async function pushEnabled() {
-  if (!pushSupported() || Notification.permission !== 'granted') return false;
-  const reg = await navigator.serviceWorker.getRegistration();
-  return Boolean(await reg?.pushManager.getSubscription());
+  try {
+    if (!pushSupported() || Notification.permission !== 'granted') return false;
+    const reg = await withTimeout(navigator.serviceWorker.getRegistration(), 3000, 'sw');
+    return Boolean(await reg?.pushManager.getSubscription());
+  } catch {
+    return false;
+  }
+}
+
+/** Registro del service worker listo (lo registra si hace falta). */
+async function swReady() {
+  const reg = await navigator.serviceWorker.getRegistration()
+    ?? await navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`);
+  if (reg.active) return reg;
+  return withTimeout(navigator.serviceWorker.ready, 10_000, 'El sistema de avisos no arranca. Recarga la app e inténtalo otra vez.');
 }
 
 export async function enablePush() {
+  if (Notification.permission === 'denied') {
+    throw new Error('Tienes los avisos bloqueados para esta web. Actívalos en Ajustes del navegador → Notificaciones.');
+  }
   const perm = await Notification.requestPermission();
-  if (perm !== 'granted') throw new Error('Sin permiso para avisos. Actívalo en los ajustes del móvil.');
-  const reg = await navigator.serviceWorker.ready;
+  if (perm !== 'granted') throw new Error('Sin permiso para avisos. Pulsa «Permitir» cuando el móvil lo pregunte.');
+  const reg = await swReady();
   const sub = (await reg.pushManager.getSubscription()) ??
     (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: toBytes(VAPID!) }));
   const j = sub.toJSON();

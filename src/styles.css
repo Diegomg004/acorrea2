@@ -222,6 +222,12 @@ img { display: block; max-width: 100%; }
 .input-icon { position: relative; }
 .input-icon > svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); pointer-events: none; }
 .input-icon .input { padding-left: 46px; }
+.pass-eye {
+  position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+  width: 42px; height: 42px; display: grid; place-items: center;
+  border: 0; border-radius: 12px; background: none; color: var(--ink);
+}
+.pass-eye:hover { background: var(--bg); }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .check { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; cursor: pointer; }
 .check input { width: 22px; height: 22px; accent-color: var(--coral); }
