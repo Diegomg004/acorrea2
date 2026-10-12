@@ -1,0 +1,40 @@
+{
+  "name": "acorrea2",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Acorrea2: planes de la manada, una vez al mes.",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test src/lib/logic.test.ts",
+    "verify": "npm run typecheck && npm test && npm run build",
+    "test:db": "node scripts/test-db.mjs",
+    "notify": "node scripts/notify.mjs",
+    "setup": "node scripts/setup.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/figtree": "^5.3.0",
+    "@phosphor-icons/react": "^2.1.10",
+    "@supabase/supabase-js": "^2.117.3",
+    "motion": "^14.1.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "pg": "^8.23.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "web-push": "^3.6.7"
+  }
+}

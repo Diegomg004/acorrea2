@@ -1,0 +1,38 @@
+name: Avisos
+
+# Cada 10 minutos (GitHub puede retrasarlo un poco en horas punta).
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: notify
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: node scripts/notify.mjs
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          VAPID_PUBLIC_KEY: ${{ vars.VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+      # GitHub apaga los cron de un repo tras 60 días sin actividad; esto lo evita.
+      - name: Mantener el cron encendido
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/notify.yml/enable"
+        env:
+          GH_TOKEN: ${{ github.token }}
