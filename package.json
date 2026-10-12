@@ -15,6 +15,7 @@
     "test": "node --test src/lib/logic.test.ts",
     "verify": "npm run typecheck && npm test && npm run build",
     "test:db": "node scripts/test-db.mjs",
+    "test:live": "node scripts/e2e-live.mjs",
     "notify": "node scripts/notify.mjs",
     "setup": "node scripts/setup.mjs"
   },
