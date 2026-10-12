@@ -124,8 +124,8 @@ function Form({ plan, initialDate }: { plan?: Plan; initialDate?: string }) {
     <form className="stack" onSubmit={submit} style={{ maxWidth: 720 }}>
       <motion.div className="page-head" {...rise(0)}>
         <div>
-          <div className="eyebrow">{plan ? 'Editar plan' : 'Nuevo plan'}</div>
-          <h1 className="title-xl">{plan ? <>Retocar el <span className="hl">plan</span></> : <>¿Qué <span className="hl">liamos</span>?</>}</h1>
+          <div className="eyebrow">{plan ? 'Editar plan' : 'Nuevo plan · que no se entere nadie en casa'}</div>
+          <h1 className="title-xl">{plan ? <>Retocar la <span className="hl">orgía</span></> : <>La próxima <span className="hl">orgía</span></>}</h1>
         </div>
       </motion.div>
 
